@@ -25,6 +25,11 @@ class Result(str, Enum):
     REFUSED = 'refused'
     NULL = ''
 
+class RefusedPolicies(str, Enum):
+    AGE = 'age'
+    COMMITMENT = 'commitment'
+    SCORE = 'score'
+
 
 class LoanStatus(BaseModel):
     id: UUID
