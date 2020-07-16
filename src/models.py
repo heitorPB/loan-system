@@ -29,13 +29,14 @@ class RefusedPolicies(str, Enum):
     AGE = 'age'
     COMMITMENT = 'commitment'
     SCORE = 'score'
+    NULL = ''
 
 
 class LoanStatus(BaseModel):
     id: UUID
     status: Status
     result: Result
-    refused_policy: str # TODO create an Enum class for age/score/commitment
+    refused_policy: RefusedPolicies
     amount: float
     terms: int
 
