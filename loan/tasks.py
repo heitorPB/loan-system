@@ -6,8 +6,8 @@ from celery import Celery
 import etcd3
 from decouple import config
 
-from .models import RefusedPolicies, Result, Status
-from .policies import check_age, check_commitment, check_score
+from loan.models import RefusedPolicies, Result, Status
+from loan.policies import check_age, check_commitment, check_score
 
 
 RABBITMQ_USER = config('RABBITMQ_USER')

@@ -5,8 +5,8 @@ import etcd3
 from decouple import config
 from fastapi import FastAPI, HTTPException
 
-from .models import Id, Loan, LoanStatus, Error
-from .tasks import celery_app
+from loan.models import Id, Loan, LoanStatus, Error
+from loan.tasks import celery_app
 
 
 ETCD_HOST = config('ETCD_HOST', default='localhost')
@@ -38,7 +38,7 @@ async def request_loan(loan: Loan):
                         port=ETCD_PORT)
     r = etcd.put(str(uuid), body)
 
-    celery_app.send_task('src.tasks.pipeline', args=[str(uuid)])
+    celery_app.send_task('loan.tasks.pipeline', args=[str(uuid)])
 
     return {'id': uuid}
 
