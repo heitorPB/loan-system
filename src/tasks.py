@@ -7,7 +7,7 @@ import etcd3
 from decouple import config
 
 from .models import RefusedPolicies, Result, Status
-from .policies import check_age, check_score
+from .policies import check_age, check_commitment, check_score
 
 
 RABBITMQ_USER = config('RABBITMQ_USER')
@@ -47,6 +47,14 @@ def pipeline(loan_id: UUID):
         request['status'] = Status.COMPLETED
         request['result'] = Result.REFUSED
         request['refused_policy'] = RefusedPolicies.SCORE
+        etcd.put(loan_id, json.dumps(request))
+        return
+
+    if not check_commitment(request):
+        print('Compromised commitment')
+        request['status'] = Status.COMPLETED
+        request['result'] = Result.REFUSED
+        request['refused_policy'] = RefusedPolicies.COMMITMENT
         etcd.put(loan_id, json.dumps(request))
         return
 
