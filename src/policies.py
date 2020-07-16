@@ -85,7 +85,6 @@ def calculate_number_of_parcels(available_income,
                                 score):
     i = interest(score, requested_parcels)
     parcel = calculate_parcel(requested_amount, requested_parcels, i)
-    print(f'parcel {parcel}')
 
     if parcel > available_income:
         # increase number of parcels and try again
