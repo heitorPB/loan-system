@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 from functools import lru_cache
 
 from decouple import config
@@ -39,37 +40,36 @@ def check_score(request) -> bool:
     return score > 600
 
 
-def get_commitment(cpf: str) -> float:
+def get_commitment(cpf: str) -> Decimal:
     headers = {'x-api-key': API_KEY}
     payload = {'cpf': cpf}
     r = requests.post(COMMITMENT_URL, headers=headers, json=payload)
-    commitment = r.json()['commitment']
+    commitment = Decimal(str(r.json()['commitment']))
     return commitment
 
 
-def interest(score: int, parcels: int) -> float:
+def interest(score: int, parcels: int) -> Decimal:
     """Monthly interest rate, based on score and number of parcels"""
 
-    # TODO change from float to decimal
     if 600 <= score <= 699:
-        if 6 == parcels: return 3.9/100
-        if 9 == parcels: return 4.2/100
-        if 12 == parcels: return 4.5/100
+        if 6 == parcels: return Decimal('3.9') / 100
+        if 9 == parcels: return Decimal('4.2') / 100
+        if 12 == parcels: return Decimal('4.5') / 100
     elif 700 <= score <= 799:
-        if 6 == parcels: return 4.7/100
-        if 9 == parcels: return 5.0/100
-        if 12 == parcels: return 5.3/100
+        if 6 == parcels: return Decimal('4.7') / 100
+        if 9 == parcels: return Decimal('5.0') / 100
+        if 12 == parcels: return Decimal('5.3') / 100
     elif 800 <= score <= 899:
-        if 6 == parcels: return 5.5/100
-        if 9 == parcels: return 5.8/100
-        if 12 == parcels: return 6.1/100
+        if 6 == parcels: return Decimal('5.5') / 100
+        if 9 == parcels: return Decimal('5.8') / 100
+        if 12 == parcels: return Decimal('6.1') / 100
     elif 900 <= score:
-        if 6 == parcels: return 6.4/100
-        if 9 == parcels: return 6.6/100
-        if 12 == parcels: return 6.9/100
+        if 6 == parcels: return Decimal('6.4') / 100
+        if 9 == parcels: return Decimal('6.6') / 100
+        if 12 == parcels: return Decimal('6.9') / 100
 
 
-def calculate_parcel(pv, n, i) -> float:
+def calculate_parcel(pv: Decimal, n: int, i: Decimal) -> Decimal:
     """ Calculate parcel value
 
     - pv: present value - request loan value
@@ -105,7 +105,7 @@ def check_commitment(request) -> bool:
     compromised = commitment * request['income']
     available_income = (1 - commitment) * request['income']
 
-    amount = float(request['amount'])
+    amount = Decimal(str(request['amount']))
     score = get_score(request['cpf'])
     n = int(request['terms'])
 

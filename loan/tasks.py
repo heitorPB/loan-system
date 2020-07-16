@@ -1,10 +1,10 @@
-import json
 from time import sleep
 from uuid import UUID
 
 from celery import Celery
 import etcd3
 from decouple import config
+import simplejson as json
 
 from loan.models import RefusedPolicies, Result, Status
 from loan.policies import check_age, check_commitment, check_score
@@ -32,14 +32,14 @@ def pipeline(loan_id: UUID):
     etcd = etcd3.client(host=ETCD_HOST,
                         port=ETCD_PORT)
     r = etcd.get(loan_id)
-    request = json.loads(r[0])
+    request = json.loads(r[0], use_decimal=True)
 
     if not check_age(request):
         print('Under age')
         request['status'] = Status.COMPLETED
         request['result'] = Result.REFUSED
         request['refused_policy'] = RefusedPolicies.AGE
-        etcd.put(loan_id, json.dumps(request))
+        etcd.put(loan_id, json.dumps(request, use_decimal=True))
         return
 
     if not check_score(request):
@@ -47,7 +47,7 @@ def pipeline(loan_id: UUID):
         request['status'] = Status.COMPLETED
         request['result'] = Result.REFUSED
         request['refused_policy'] = RefusedPolicies.SCORE
-        etcd.put(loan_id, json.dumps(request))
+        etcd.put(loan_id, json.dumps(request, use_decimal=True))
         return
 
     if not check_commitment(request):
@@ -55,14 +55,14 @@ def pipeline(loan_id: UUID):
         request['status'] = Status.COMPLETED
         request['result'] = Result.REFUSED
         request['refused_policy'] = RefusedPolicies.COMMITMENT
-        etcd.put(loan_id, json.dumps(request))
+        etcd.put(loan_id, json.dumps(request, use_decimal=True))
         return
 
     print('All policies OK')
 
     request['status'] = Status.COMPLETED
     request['result'] = Result.APPROVED
-    etcd.put(loan_id, json.dumps(request))
+    etcd.put(loan_id, json.dumps(request, use_decimal=True))
 
 
 if __name__ == '__main__':

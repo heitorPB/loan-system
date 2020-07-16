@@ -1,9 +1,9 @@
-import json
 from uuid import UUID, uuid4
 
 import etcd3
 from decouple import config
 from fastapi import FastAPI, HTTPException
+import simplejson as json
 
 from loan.models import Id, Loan, LoanStatus, Error
 from loan.tasks import celery_app
@@ -14,7 +14,7 @@ ETCD_PORT = config('ETCD_PORT', default='2379')
 
 app = FastAPI(title='Loan System',
               description="Parse and accept/decline a user's request for loans",
-              version='0.2.0')
+              version='0.2.1')
 
 
 @app.post('/loan',
@@ -32,7 +32,7 @@ async def request_loan(loan: Loan):
             'status': 'processing',
             'result': '',
             'refused_policy': ''}
-    body = json.dumps(data)
+    body = json.dumps(data, use_decimal=True)
 
     etcd = etcd3.client(host=ETCD_HOST,
                         port=ETCD_PORT)
@@ -55,6 +55,6 @@ async def loan_status(loan_id: UUID):
         raise HTTPException(status_code=404,
                             detail=f"Loan {loan_id} not found")
 
-    data = json.loads(data)
+    data = json.loads(data, use_decimal=True)
     status = LoanStatus(**data)
     return status

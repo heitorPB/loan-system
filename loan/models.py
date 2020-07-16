@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 from enum import Enum
 from uuid import UUID
 
@@ -37,8 +38,7 @@ class LoanStatus(BaseModel):
     status: Status
     result: Result
     refused_policy: RefusedPolicies
-    # TODO change to decimal
-    amount: float
+    amount: Decimal
     terms: int
 
 
@@ -47,11 +47,9 @@ class Loan(BaseModel):
     cpf: str = Field(..., regex="^\d{14}|\d{2}.\d{3}.\d{3}/\d{4}-\d{2}$",
                      description="CPF with or without formatting")
     birthdate: date = Field(..., description="Client's birthdate (YYYY-MM-DD)")
-    # TODO change to decimal
-    amount: float = Field(..., ge=1000, le=4000, description="Loan amount")
+    amount: Decimal = Field(..., ge=1000, le=4000, description="Loan amount")
     terms: Terms = Field(..., description="Desired number of terms")
-    # TODO change to decimal
-    income: float = Field(..., description="Client's monthly income")
+    income: Decimal = Field(..., description="Client's monthly income")
 
 
 class Error(BaseModel):
