@@ -1,7 +1,9 @@
+**/__pycache__
 .coverage
 .git
 .gitignore
 htmlcov/
 .pytest_cache/
+
 README.md
 venv/
