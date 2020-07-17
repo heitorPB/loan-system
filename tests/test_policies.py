@@ -1,7 +1,8 @@
 from datetime import date
 from decimal import Decimal
 
-from loan.policies import check_age, get_score, check_score, interest
+from loan.policies import check_age, get_score, check_score, get_commitment, \
+                          interest
 
 def test_underage():
     fake_request = {'birthdate': date.today().isoformat()}
@@ -31,6 +32,16 @@ def test_score():
     assert check_score({'cpf': '12312312312315'}) == False
     assert check_score({'cpf': '12312312312316'}) == True
     assert check_score({'cpf': '12312312312317'}) == False
+
+def test_commitment_value():
+    assert get_commitment('12312312312310') == Decimal('.57')
+    assert get_commitment('12312312312311') == Decimal('.47')
+    assert get_commitment('12312312312312') == Decimal('.36')
+    assert get_commitment('12312312312313') == Decimal('.72')
+    assert get_commitment('12312312312314') == Decimal('.99')
+    assert get_commitment('12312312312315') == Decimal('.62')
+    assert get_commitment('12312312312316') == Decimal('.14')
+    assert get_commitment('12312312312317') == Decimal('.83')
 
 
 def test_interest():
