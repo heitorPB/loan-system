@@ -52,21 +52,21 @@ def interest(score: int, parcels: int) -> Decimal:
     """Monthly interest rate, based on score and number of parcels"""
 
     if 600 <= score <= 699:
-        if 6 == parcels: return Decimal('3.9') / 100
-        if 9 == parcels: return Decimal('4.2') / 100
-        if 12 == parcels: return Decimal('4.5') / 100
-    elif 700 <= score <= 799:
-        if 6 == parcels: return Decimal('4.7') / 100
-        if 9 == parcels: return Decimal('5.0') / 100
-        if 12 == parcels: return Decimal('5.3') / 100
-    elif 800 <= score <= 899:
-        if 6 == parcels: return Decimal('5.5') / 100
-        if 9 == parcels: return Decimal('5.8') / 100
-        if 12 == parcels: return Decimal('6.1') / 100
-    elif 900 <= score:
         if 6 == parcels: return Decimal('6.4') / 100
         if 9 == parcels: return Decimal('6.6') / 100
         if 12 == parcels: return Decimal('6.9') / 100
+    elif 700 <= score <= 799:
+        if 6 == parcels: return Decimal('5.5') / 100
+        if 9 == parcels: return Decimal('5.8') / 100
+        if 12 == parcels: return Decimal('6.1') / 100
+    elif 800 <= score <= 899:
+        if 6 == parcels: return Decimal('4.7') / 100
+        if 9 == parcels: return Decimal('5.0') / 100
+        if 12 == parcels: return Decimal('5.3') / 100
+    elif 900 <= score:
+        if 6 == parcels: return Decimal('3.9') / 100
+        if 9 == parcels: return Decimal('4.2') / 100
+        if 12 == parcels: return Decimal('4.5') / 100
 
 
 def calculate_parcel(pv: Decimal, n: int, i: Decimal) -> Decimal:

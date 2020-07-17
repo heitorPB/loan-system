@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from loan.policies import check_age
+from loan.policies import check_age, interest
 
 def test_underage():
     fake_request = {'birthdate': date.today().isoformat()}
@@ -11,3 +11,18 @@ def test_underage():
 def test_legalage():
     fake_request = {'birthdate': '1997-02-05'}
     assert check_age(fake_request)
+
+
+def test_interest():
+    assert interest(900, 6) == Decimal('0.039')
+    assert interest(900, 9) == Decimal('0.042')
+    assert interest(900, 12) == Decimal('0.045')
+    assert interest(800, 6) == Decimal('0.047')
+    assert interest(800, 9) == Decimal('0.05')
+    assert interest(800, 12) == Decimal('0.053')
+    assert interest(700, 6) == Decimal('0.055')
+    assert interest(700, 9) == Decimal('0.058')
+    assert interest(700, 12) == Decimal('0.061')
+    assert interest(600, 6) == Decimal('0.064')
+    assert interest(600, 9) == Decimal('0.066')
+    assert interest(600, 12) == Decimal('0.069')

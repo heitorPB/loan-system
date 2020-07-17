@@ -14,7 +14,7 @@ ETCD_PORT = config('ETCD_PORT', default='2379')
 
 app = FastAPI(title='Loan System',
               description="Parse and accept/decline a user's request for loans",
-              version='0.2.1')
+              version='0.2.2')
 
 
 @app.post('/loan',
